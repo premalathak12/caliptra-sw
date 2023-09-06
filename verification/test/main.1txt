@@ -1,0 +1,62 @@
+package main
+
+/*
+#include <stdint.h>
+#include <stdlib.h>
+
+typedef struct caliptra_buffer {
+    const uint8_t *data;
+    uintptr_t len;
+} caliptra_buffer;
+*/
+import "C"
+
+import (
+	"unsafe"
+	"fmt"
+)
+
+type CommandHdr struct {
+	Magic   uint32
+	Cmd     CommandCode
+	Profile Profile
+}
+
+type Profile struct {
+	MajorVersion uint16
+	MinorVersion uint16
+}
+
+type CommandCode uint32
+
+const (
+	CommandGetProfile        CommandCode = 0x1
+	CommandInitializeContext CommandCode = 0x7
+	CommandCertifyKey        CommandCode = 0x9
+	CommandDestroyContext    CommandCode = 0xf
+	CommandTagTCI            CommandCode = 0x82
+	CommandGetTaggedTCI      CommandCode = 0x83
+)
+
+const (
+	CmdMagic  uint32 = 0x44504543
+	CURRENT_PROFILE_MAJOR_VERSION uint16 = 0
+	CURRENT_PROFILE_MINOR_VERSION uint16 = 8
+)
+
+func main() {
+	cmdHdr := CommandHdr{
+		Magic: CmdMagic,
+		Cmd:   CommandCode(CommandGetProfile),
+		Profile: Profile{
+			MajorVersion: CURRENT_PROFILE_MAJOR_VERSION,
+			MinorVersion: CURRENT_PROFILE_MINOR_VERSION,
+		},
+	}
+
+	var buffer C.caliptra_buffer
+	buffer.data = (*C.uint8_t)(unsafe.Pointer(&cmdHdr))
+	buffer.len = C.uintptr_t(unsafe.Sizeof(cmdHdr))
+
+	fmt.Println(buffer)
+}

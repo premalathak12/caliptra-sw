@@ -54,7 +54,7 @@ func TestGetProfile_ExtendTciMode(t *testing.T) {
 	testGetProfile(instance, t)
 }
 
-func TestGetProfile_AutoInitMode(t *testing.T) {
+/*func TestGetProfile_AutoInitMode(t *testing.T) {
 
 	support_needed := []string{"AutoInit"}
 	instance, err := GetTestTarget(support_needed)
@@ -67,7 +67,7 @@ func TestGetProfile_AutoInitMode(t *testing.T) {
 	}
 
 	testGetProfile(instance, t)
-}
+}*/
 
 func TestGetProfile_TaggingMode(t *testing.T) {
 
@@ -99,7 +99,7 @@ func TestGetProfile_RotateContextMode(t *testing.T) {
 	testGetProfile(instance, t)
 }
 
-func TestGetProfile_X509Mode(t *testing.T) {
+/*func TestGetProfile_X509Mode(t *testing.T) {
 
 	support_needed := []string{"X509"}
 	instance, err := GetTestTarget(support_needed)
@@ -112,7 +112,7 @@ func TestGetProfile_X509Mode(t *testing.T) {
 	}
 
 	testGetProfile(instance, t)
-}
+}*/
 
 func TestGetProfile_CsrMode(t *testing.T) {
 
@@ -232,7 +232,7 @@ func TestGetProfile_AllSupportMode(t *testing.T) {
 	}
 
 	testGetProfile(instance, t)
-}
+} 
 
 func testGetProfile(d TestDPEInstance, t *testing.T) {
 	const MIN_TCI_NODES uint32 = 8

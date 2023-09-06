@@ -116,7 +116,7 @@ func (s *DpeEmulator) waitForPower(on bool) bool {
 
 	for i := 0; i < checks_per_sec*timeout_seconds; i++ {
 		// Check if the socket file has been created.
-		if fileExists(simulatorSocketPath) == on {
+		if fileExists(emulatorSocketPath) == on {
 			return true
 		}
 		time.Sleep(time.Duration(1000/checks_per_sec) * time.Millisecond)
@@ -126,7 +126,7 @@ func (s *DpeEmulator) waitForPower(on bool) bool {
 
 func (s *DpeEmulator) SendCmd(buf []byte) ([]byte, error) {
 	// Connect to DPE instance.
-	conn, err := net.Dial("unix", simulatorSocketPath)
+	conn, err := net.Dial("unix", emulatorSocketPath)
 	if err != nil {
 		return nil, err
 	}
@@ -149,8 +149,16 @@ func (s *DpeEmulator) SendCmd(buf []byte) ([]byte, error) {
 		return nil, errors.New("didn't send the whole command")
 	}
 
-	// Get the response.
-	return io.ReadAll(conn)
+	defer conn.Close()
+
+	conn.SetDeadline(time.Now().Add(5 * time.Second))
+	
+	message, err := io.ReadAll(conn)
+	if err != nil {
+	  return nil, err
+	}
+	
+	return message , err
 }
 
 func (s *DpeEmulator) GetSupport() *Support {
